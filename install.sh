@@ -143,9 +143,9 @@ iocage fstab -a ${JAIL_NAME} ${POOL_PATH}/${TORRENTS_LOCATION} /mnt/torrents nul
 iocage restart ${JAIL_NAME}
   
 # add media group to media user
-#iocage exec ${JAIL_NAME} pw groupadd -n media -g 8675309
-#iocage exec ${JAIL_NAME} pw groupmod media -m media
-#iocage restart ${JAIL_NAME} 
+iocage exec ${JAIL_NAME} pw groupadd -n media -g 8675309
+iocage exec ${JAIL_NAME} pw groupmod media -m media
+iocage restart ${JAIL_NAME} 
 
 #
 # Make media owner of data directories
@@ -153,9 +153,9 @@ iocage restart ${JAIL_NAME}
 #chown -R media:media $radarr_config/
 #chown -R media:media $lidarr_config/
 #chown -R media:media $sabnzbd_config/
-chown -R media:media $plex_config/
-chown -R media:media ${POOL_PATH}/${MEDIA_LOCATION}
-chown -R media:media ${POOL_PATH}/${TORRENTS_LOCATION}
+#chown -R plex:plex $plex_config/
+#chown -R media:media ${POOL_PATH}/${MEDIA_LOCATION}
+#chown -R media:media ${POOL_PATH}/${TORRENTS_LOCATION}
 
 #
 # Install Radarr
@@ -169,8 +169,8 @@ iocage exec ${JAIL_NAME} rm /usr/local/share/Radarr.develop.0.2.0.995.linux.tar.
 #
 # Make media the user of the jail and create group media and make media a user of the that group
 iocage exec ${JAIL_NAME} "pw user add media -c media -u 8675309  -d /nonexistent -s /usr/bin/nologin"
-#iocage exec ${JAIL_NAME} "pw groupadd -n media -g 8675309"
-#iocage exec ${JAIL_NAME} "pw groupmod media -m media"
+iocage exec ${JAIL_NAME} "pw groupadd -n media -g 8675309"
+iocage exec ${JAIL_NAME} "pw groupmod media -m media"
 
 
 iocage exec ${JAIL_NAME} chown -R media:media /usr/local/share/Radarr /config/${RADARR_DATA}
@@ -208,11 +208,22 @@ iocage exec ${JAIL_NAME} chown -R media:media /usr/local/share/Lidarr /config/${
 #iocage exec ${JAIL_NAME} mkdir /usr/local/etc/rc.d
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/lidarr /usr/local/etc/rc.d/lidarr
 iocage exec ${JAIL_NAME} chmod u+x /usr/local/etc/rc.d/lidarr
+iocage exec ${JAIL_NAME} chown -R media:media /usr/local/etc/rc.d/lidarr
 iocage exec ${JAIL_NAME} sed -i '' "s/lidarrdata/${LIDARR_DATA}/" /usr/local/etc/rc.d/lidarr
 iocage exec ${JAIL_NAME} sysrc "lidarr_enable=YES"
 iocage exec ${JAIL_NAME} service lidarr start
 
 echo "lidarr installed"
+
+#
+# Make pkg upgrade get the latest repo
+iocage exec ${JAIL_NAME} mkdir -p /usr/local/etc/pkg/repos/
+iocage exec ${JAIL_NAME} cp -f /mnt/configs/FreeBSD.conf /usr/local/etc/pkg/repos/FreeBSD.conf
+
+#
+# Upgrade to the lastest repo
+iocage exec ${JAIL_NAME} pkg upgrade -y
+iocage restart ${JAIL_NAME}
 
 #
 # Install Sabnzbd
@@ -245,30 +256,25 @@ if [ $PLEX_TYPE == "plexpass" ]; then
    echo "plexpass to be installed"
    iocage exec ${JAIL_NAME} pkg install -y plexmediaserver-plexpass
    iocage exec ${JAIL_NAME} sysrc "plexmediaserver_plexpass_enable=YES"
-   iocage exec ${JAIL_NAME} sysrc plexmediaserver_plexpass_support_path="/config/plex"
+   iocage exec ${JAIL_NAME} sysrc plexmediaserver_plexpass_support_path="/config/${PLEX_DATA}"
    iocage exec ${JAIL_NAME} service plexmediaserver_plexpass start
 else
    echo "plex to be installed"
    iocage exec ${JAIL_NAME} pkg install -y plexmediaserver
    iocage exec ${JAIL_NAME} sysrc "plexmediaserver_enable=YES"
-   iocage exec ${JAIL_NAME} sysrc plexmediaserver_support_path="/config/plex"
+   iocage exec ${JAIL_NAME} sysrc plexmediaserver_support_path="/config/${PLEX_DATA}"
    iocage exec ${JAIL_NAME} service plexmediaserver start
 fi
+
+# Make media the user of the jail and create group media and make media a user of the that group
+iocage exec ${JAIL_NAME} "pw groupmod media -m plex"
+#iocage exec ${JAIL_NAME} chown -R plex:plex /config/${PLEX_DATA}
+
 echo "${PLEX_TYPE} installed"
 
 #
-# Make pkg upgrade get the latest repo
-iocage exec ${JAIL_NAME} mkdir -p /usr/local/etc/pkg/repos/
-iocage exec ${JAIL_NAME} cp -f /mnt/configs/FreeBSD.conf /usr/local/etc/pkg/repos/FreeBSD.conf
-
-#
-# Upgrade to the lastest repo
-iocage exec ${JAIL_NAME} pkg upgrade -y
-iocage restart ${JAIL_NAME}
-
-#
 # remove /mnt/configs as no longer needed
-iocage fstab -r ${JAIL_NAME} ${CONFIGS_PATH} /mnt/configs nullfs rw 0 0
+#iocage fstab -r ${JAIL_NAME} ${CONFIGS_PATH} /mnt/configs nullfs rw 0 0
 
 echo
 echo "Radarr should be available at http://${JAIL_IP}:7878"

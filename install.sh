@@ -14,8 +14,7 @@ DEFAULT_GW_IP=""
 INTERFACE=""
 VNET="off"
 POOL_PATH=""
-JAIL_NAME="mono"
-#PORTS_PATH=""
+JAIL_NAME=""
 SONARR_DATA=""
 RADARR_DATA=""
 LIDARR_DATA=""
@@ -119,8 +118,8 @@ mkdir -p ${POOL_PATH}/apps/${SABNZBD_DATA}
 mkdir -p ${POOL_PATH}/apps/${PLEX_DATA}
 mkdir -p ${POOL_PATH}/${MEDIA_LOCATION}
 mkdir -p ${POOL_PATH}/${TORRENTS_LOCATION}
-#echo "mkdir -p '${POOL_PATH}/apps/${SONARR_DATA}'"
-#echo "mkdir -p '${POOL_PATH}/apps/${SABNZBD_DATA}'"
+echo "mkdir -p '${POOL_PATH}/apps/${SONARR_DATA}'"
+echo "mkdir -p '${POOL_PATH}/apps/${SABNZBD_DATA}'"
 
 sonarr_config=${POOL_PATH}/apps/${SONARR_DATA}
 radarr_config=${POOL_PATH}/apps/${RADARR_DATA}
@@ -143,9 +142,9 @@ iocage fstab -a ${JAIL_NAME} ${POOL_PATH}/${TORRENTS_LOCATION} /mnt/torrents nul
 iocage restart ${JAIL_NAME}
   
 # add media group to media user
-iocage exec ${JAIL_NAME} pw groupadd -n media -g 8675309
-iocage exec ${JAIL_NAME} pw groupmod media -m media
-iocage restart ${JAIL_NAME} 
+#iocage exec ${JAIL_NAME} pw groupadd -n media -g 8675309
+#iocage exec ${JAIL_NAME} pw groupmod media -m media
+#iocage restart ${JAIL_NAME} 
 
 #
 # Make media owner of data directories
@@ -169,10 +168,11 @@ iocage exec ${JAIL_NAME} rm /usr/local/share/Radarr.develop.0.2.0.995.linux.tar.
 #
 # Make media the user of the jail and create group media and make media a user of the that group
 iocage exec ${JAIL_NAME} "pw user add media -c media -u 8675309  -d /nonexistent -s /usr/bin/nologin"
-iocage exec ${JAIL_NAME} "pw groupadd -n media -g 8675309"
+#iocage exec ${JAIL_NAME} "pw groupadd -n media -g 8675309"
 iocage exec ${JAIL_NAME} "pw groupmod media -m media"
 
-
+#
+#Install Radarr
 iocage exec ${JAIL_NAME} chown -R media:media /usr/local/share/Radarr /config/${RADARR_DATA}
 iocage exec ${JAIL_NAME} -- mkdir /usr/local/etc/rc.d
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/radarr /usr/local/etc/rc.d/radarr
@@ -268,7 +268,7 @@ fi
 
 # Make media the user of the jail and create group media and make media a user of the that group
 iocage exec ${JAIL_NAME} "pw groupmod media -m plex"
-#iocage exec ${JAIL_NAME} chown -R plex:plex /config/${PLEX_DATA}
+iocage exec ${JAIL_NAME} chown -R plex:plex /config/${PLEX_DATA}
 
 echo "${PLEX_TYPE} installed"
 

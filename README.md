@@ -47,3 +47,9 @@ Then run this command
 ```
 ./install.sh
 ```
+
+## After Script completes
+Run Sabnzbd wizard
+Add to Sonarr, Radarr, Lidarr a Indexer, Download Client, and Connect (Plex).
+Set Media Management to Rename movies and optionally Permissions to yes with File chmod mask 0660, Folder chmod mask 0770, chown User:media, chown Group:media
+Plex follow steps including adding libraries.  If metadata(thumbnails) doesn't download move Local Media Assets to the bottom of the list in server/settings/agents/shows/TheTVDB etc.  

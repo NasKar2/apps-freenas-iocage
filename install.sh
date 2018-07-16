@@ -257,18 +257,20 @@ if [ $PLEX_TYPE == "plexpass" ]; then
    iocage exec ${JAIL_NAME} pkg install -y plexmediaserver-plexpass
    iocage exec ${JAIL_NAME} sysrc "plexmediaserver_plexpass_enable=YES"
    iocage exec ${JAIL_NAME} sysrc plexmediaserver_plexpass_support_path="/config/${PLEX_DATA}"
+   iocage exec ${JAIL_NAME} chown -R plex:plex /config/${PLEX_DATA}
+   iocage exec ${JAIL_NAME} chmod -R 760 /config/${PLEX_DATA}
+   iocage exec ${JAIL_NAME} "pw groupmod media -m plex"
    iocage exec ${JAIL_NAME} service plexmediaserver_plexpass start
 else
    echo "plex to be installed"
    iocage exec ${JAIL_NAME} pkg install -y plexmediaserver
    iocage exec ${JAIL_NAME} sysrc "plexmediaserver_enable=YES"
    iocage exec ${JAIL_NAME} sysrc plexmediaserver_support_path="/config/${PLEX_DATA}"
+   iocage exec ${JAIL_NAME} chown -R plex:plex /config/${PLEX_DATA}
+   iocage exec ${JAIL_NAME} chmod -R 760 /config/${PLEX_DATA}
+   iocage exec ${JAIL_NAME} "pw groupmod media -m plex"
    iocage exec ${JAIL_NAME} service plexmediaserver start
 fi
-
-# Make media the user of the jail and create group media and make media a user of the that group
-iocage exec ${JAIL_NAME} "pw groupmod media -m plex"
-iocage exec ${JAIL_NAME} chown -R plex:plex /config/${PLEX_DATA}
 
 echo "${PLEX_TYPE} installed"
 

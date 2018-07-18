@@ -208,7 +208,7 @@ iocage exec ${JAIL_NAME} chown -R media:media /usr/local/share/Lidarr /config/${
 #iocage exec ${JAIL_NAME} mkdir /usr/local/etc/rc.d
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/lidarr /usr/local/etc/rc.d/lidarr
 iocage exec ${JAIL_NAME} chmod u+x /usr/local/etc/rc.d/lidarr
-iocage exec ${JAIL_NAME} chown -R media:media /usr/local/etc/rc.d/lidarr
+#iocage exec ${JAIL_NAME} chown -R media:media /usr/local/etc/rc.d/lidarr
 iocage exec ${JAIL_NAME} sed -i '' "s/lidarrdata/${LIDARR_DATA}/" /usr/local/etc/rc.d/lidarr
 iocage exec ${JAIL_NAME} sysrc "lidarr_enable=YES"
 iocage exec ${JAIL_NAME} service lidarr start
@@ -239,6 +239,9 @@ iocage exec ${JAIL_NAME} cp -f /mnt/configs/sabnzbd /usr/local/etc/rc.d/sabnzbd
 #echo "sabnzbd_data ${SABNZBD_DATA}"
 iocage exec ${JAIL_NAME} sed -i '' "s/sabnzbddata/${SABNZBD_DATA}/" /usr/local/etc/rc.d/sabnzbd
 iocage exec ${JAIL_NAME} sed -i '' "s/sabnzbdpid/${SABNZBD_DATA}/" /usr/local/etc/rc.d/sabnzbd
+iocage exec ${JAIL_NAME} chmod u+x /usr/local/etc/rc.d/sabnzbd
+#iocage exec ${JAIL_NAME} chown -R media:media /usr/local/etc/rc.d/sabnzbd
+
 
 iocage restart ${JAIL_NAME}
 iocage exec ${JAIL_NAME} service sabnzbd start

@@ -17,7 +17,7 @@ SONARR_DATA="sonarrdata" will create a data directory /mnt/v1/apps/sonarrdata to
 
 MEDIA_LOCATION will set the location of your media files, in this example /mnt/v1/media
 
-TORRENTS_LOCATION will set the location of your torrent files, in this example /mnt/v1/torrents
+TORRENTS_LOCATION will set the location of your torrent files, in this example /mnt/v1/torrents. A mount point at /mnt/torrents will be available in the jail if you want to add a location to store torrent files.  At this time I don't have a torrent app included but you can add it on your own.
 
 PLEX_TYPE needs to be set to plexpass or plex depending on which version you want.
 
@@ -30,11 +30,11 @@ INTERFACE="igb0"
 VNET="off"
 POOL_PATH="/mnt/v1"
 JAIL_NAME="plexapps"
-SONARR_DATA="sonarrdata2"
-RADARR_DATA="radarrdata2"
-LIDARR_DATA="lidarrdata2"
-SABNZBD_DATA="sabnzbddata2"
-PLEX_DATA="plexdata2"
+SONARR_DATA="sonarrdata"
+RADARR_DATA="radarrdata"
+LIDARR_DATA="lidarrdata"
+SABNZBD_DATA="sabnzbddata"
+PLEX_DATA="plexdata"
 MEDIA_LOCATION="media"
 TORRENTS_LOCATION="torrents"
 PLEX_TYPE="plexpass"
@@ -52,4 +52,9 @@ Then run this command
 Run Sabnzbd wizard
 Add to Sonarr, Radarr, Lidarr a Indexer, Download Client, and Connect (Plex).
 Set Media Management to Rename movies and optionally Permissions to yes with File chmod mask 0660, Folder chmod mask 0770, chown User:media, chown Group:media
-Plex follow steps including adding libraries.  If metadata(thumbnails) doesn't download move Local Media Assets to the bottom of the list in server/settings/agents/shows/TheTVDB etc.  
+Plex follow the steps including adding libraries.  If metadata(thumbnails) doesn't download follow the instructions below.
+Server/Network/Secure connections is set to Preferred by default
+
+Make sure to add to Server/Network/List of IP addresses and networks that are allowed without auth to your subnet for example 192.168.5.0/24 to allow metadata to be downloaded.
+
+Analyze and Refresh All Metadata for the libraries

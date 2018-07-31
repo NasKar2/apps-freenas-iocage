@@ -13,6 +13,8 @@ Edit file mono-config
 
 Edit mono-config file with your network information and directory data name you want to use and location of your media files and torrents.
 
+APPS_DATA="apps" will allow you to specify the directory for the apps data /mnt/v1/<APPS_DATA>/
+
 SONARR_DATA="sonarrdata" will create a data directory /mnt/v1/apps/sonarrdata to store all the data for that app and the same for the others.
 
 MEDIA_LOCATION will set the location of your media files, in this example /mnt/v1/media
@@ -29,6 +31,7 @@ DEFAULT_GW_IP="192.168.5.1"
 INTERFACE="igb0"
 VNET="off"
 POOL_PATH="/mnt/v1"
+APPS_DATA="apps"
 JAIL_NAME="plexapps"
 SONARR_DATA="sonarrdata"
 RADARR_DATA="radarrdata"

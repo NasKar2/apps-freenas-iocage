@@ -14,6 +14,7 @@ DEFAULT_GW_IP=""
 INTERFACE=""
 VNET="off"
 POOL_PATH=""
+APPS_DATA=""
 JAIL_NAME=""
 SONARR_DATA=""
 RADARR_DATA=""
@@ -111,21 +112,21 @@ rm /tmp/pkg.json
 #mkdir -p ${PORTS_PATH}/ports
 #mkdir -p ${PORTS_PATH}/db
 
-mkdir -p ${POOL_PATH}/apps/${SONARR_DATA}
-mkdir -p ${POOL_PATH}/apps/${RADARR_DATA}
-mkdir -p ${POOL_PATH}/apps/${LIDARR_DATA}
-mkdir -p ${POOL_PATH}/apps/${SABNZBD_DATA}
-mkdir -p ${POOL_PATH}/apps/${PLEX_DATA}
+mkdir -p ${POOL_PATH}/${APPS_DATA}/${SONARR_DATA}
+mkdir -p ${POOL_PATH}/${APPS_DATA}/${RADARR_DATA}
+mkdir -p ${POOL_PATH}/${APPS_DATA}/${LIDARR_DATA}
+mkdir -p ${POOL_PATH}/${APPS_DATA}/${SABNZBD_DATA}
+mkdir -p ${POOL_PATH}/${APPS_DATA}/${PLEX_DATA}
 mkdir -p ${POOL_PATH}/${MEDIA_LOCATION}
 mkdir -p ${POOL_PATH}/${TORRENTS_LOCATION}
-echo "mkdir -p '${POOL_PATH}/apps/${SONARR_DATA}'"
-echo "mkdir -p '${POOL_PATH}/apps/${SABNZBD_DATA}'"
+echo "mkdir -p '${POOL_PATH}/${APPS_DATA}/${SONARR_DATA}'"
+echo "mkdir -p '${POOL_PATH}/${APPS_DATA}/${SABNZBD_DATA}'"
 
-sonarr_config=${POOL_PATH}/apps/${SONARR_DATA}
-radarr_config=${POOL_PATH}/apps/${RADARR_DATA}
-lidarr_config=${POOL_PATH}/apps/${LIDARR_DATA}
-sabnzbd_config=${POOL_PATH}/apps/${SABNZBD_DATA}
-plex_config=${POOL_PATH}/apps/${PLEX_DATA}
+sonarr_config=${POOL_PATH}/${APPS_DATA}/${SONARR_DATA}
+radarr_config=${POOL_PATH}/${APPS_DATA}/${RADARR_DATA}
+lidarr_config=${POOL_PATH}/${APPS_DATA}/${LIDARR_DATA}
+sabnzbd_config=${POOL_PATH}/${APPS_DATA}/${SABNZBD_DATA}
+plex_config=${POOL_PATH}/${APPS_DATA}/${PLEX_DATA}
 #iocage exec ${JAIL_NAME} mkdir -p /mnt/configs
 iocage exec ${JAIL_NAME} 'sysrc ifconfig_epair0_name="epair0b"'
 
@@ -135,7 +136,7 @@ iocage exec ${JAIL_NAME} 'sysrc ifconfig_epair0_name="epair0b"'
 #iocage fstab -a ${JAIL_NAME} ${PORTS_PATH}/db /var/db/portsnap nullfs rw 0 0
 
 iocage fstab -a ${JAIL_NAME} ${CONFIGS_PATH} /mnt/configs nullfs rw 0 0
-iocage fstab -a ${JAIL_NAME} ${POOL_PATH}/apps /config nullfs rw 0 0
+iocage fstab -a ${JAIL_NAME} ${POOL_PATH}/${APPS_DATA} /config nullfs rw 0 0
 iocage fstab -a ${JAIL_NAME} ${POOL_PATH}/${MEDIA_LOCATION} /mnt/media nullfs rw 0 0
 iocage fstab -a ${JAIL_NAME} ${POOL_PATH}/${TORRENTS_LOCATION} /mnt/torrents nullfs rw 0 0
 
